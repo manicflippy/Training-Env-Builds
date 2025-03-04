@@ -8,6 +8,17 @@ data "aws_region" "current" {}
 data "http" "my_ip" {
   url = "https://ifconfig.io"
 }
+# Terraform Data Block - Lookup Ubuntu 22.04
+data "aws_ami" "ubuntu_22_04" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  owners = ["099720109477"]
+}
 
 locals {
   team        = "Training"
@@ -62,11 +73,12 @@ module "ubuntu_docker" {
   private_key_path = local_file.private_key.filename
   vpc_id           = module.aws-vpc-and-subnets.vpc_id
   subnet_id        = module.aws-vpc-and-subnets.public_subnet_ids[0]
+  ami_id           = data.aws_ami.ubuntu_22_04.id
   
   # Optional parameters with defaults
   region          = var.region
   name_prefix     = "${var.environment}-ubuntu-docker"
-  instance_type   = "t2.medium"
+  instance_type   = var.instance_type
   ssh_cidr_blocks = [
       "${local.my_ip}/32"
     ] 
@@ -80,7 +92,7 @@ module "ubuntu_docker" {
   # github_script_path = "setup-docker.sh"
 
   tags = {
-    Environment = "Production"
+    Environment = var.environment
     Project     = "Docker Infrastructure"
   }
 }

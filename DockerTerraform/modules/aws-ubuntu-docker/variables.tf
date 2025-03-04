@@ -13,7 +13,7 @@ variable "name_prefix" {
 variable "ami_id" {
   description = "AMI ID for Ubuntu server"
   type        = string
-  default     = "ami-0c65adc9a5c1b5d7c"  # Ubuntu 22.04 LTS in us-west-2
+  default     = null
 }
 
 variable "instance_type" {
