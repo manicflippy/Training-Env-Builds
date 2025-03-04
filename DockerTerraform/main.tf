@@ -1,10 +1,21 @@
 provider "aws" {
-  region = "us-west-2" # Change to your preferred AWS region
+  region = var.region # Change to your preferred AWS region
 }
 
 #Retrieve the list of AZs in the current AWS region
 data "aws_availability_zones" "available" {}
 data "aws_region" "current" {}
+data "http" "my_ip" {
+  url = "https://ifconfig.io"
+}
+
+locals {
+  team        = "Training"
+  application = "Docker"
+  server_name = "ec2-${var.environment}}"
+  my_ip       = trimsuffix(data.http.my_ip.response_body, "\n")
+}
+
 
 # Generate a new private key
 resource "tls_private_key" "ubuntu_key" {
@@ -38,8 +49,8 @@ module "aws-vpc-and-subnets" {
 
   # Required parameters
   vpc_cidr   = "10.0.0.0/16"
-  vpc_name   = "jp_test_vpc"
-  aws_region = "us-east-1"
+  vpc_name   = "${var.environment}_test_vpc"
+  aws_region = var.region 
 
 }
 
@@ -53,11 +64,12 @@ module "ubuntu_docker" {
   subnet_id        = module.aws-vpc-and-subnets.public_subnet_ids[0]
   
   # Optional parameters with defaults
-  region          = "us-west-2"
-  name_prefix     = "prod-ubuntu-docker"
-  instance_type   = "t2.micro"
-  ssh_cidr_blocks = ["0.0.0.0/0"] # Consider restricting to your IP for production
-
+  region          = var.region
+  name_prefix     = "${var.environment}-ubuntu-docker"
+  instance_type   = "t2.medium"
+  ssh_cidr_blocks = [
+      "${local.my_ip}/32"
+    ] 
   # Docker installation options
   install_docker     = true
   use_github_scripts = false
