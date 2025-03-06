@@ -1,6 +1,12 @@
-# Docker Version
+https://docs.docker.com/reference/cli/docker/
 
-## Downgrade to a Previous Version
+### Docker Version
+
+```sh
+docker version
+```
+
+### Downgrade to a Previous Version
 
 ```sh
 sudo systemctl stop docker
@@ -599,6 +605,7 @@ docker container exec --t <container ID/container name> <arbitrary command and p
 - `-it` = `-i-t`
 - `-i` --interactive
 - `-t` --tty Allocate a pseudo-TTY
+
 
 
 # Enterprise Edition Backup

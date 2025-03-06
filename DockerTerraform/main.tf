@@ -11,7 +11,7 @@ data "http" "my_ip" {
 
 locals {
   team        = "Training"
-  application = "Docker"
+  application = "docker"
   server_name = "ec2-${var.environment}}"
   my_ip       = trimsuffix(data.http.my_ip.response_body, "\n")
 }
@@ -55,7 +55,7 @@ module "aws-vpc-and-subnets" {
 }
 
 module "ubuntu_docker" {
-  source = "./modules/aws-ubuntu-docker"
+  source = "./modules/aws-ubuntu-install"
 
   # Required parameters
   key_name         = aws_key_pair.ubuntu_key.key_name
@@ -65,11 +65,13 @@ module "ubuntu_docker" {
   
   # Optional parameters with defaults
   region          = var.region
-  name_prefix     = "${var.environment}-ubuntu-docker"
+  name_prefix     = "${var.environment}-ubuntu-${local.application}-install"
   instance_type   = "t2.medium"
   ssh_cidr_blocks = [
       "${local.my_ip}/32"
     ] 
+  installation_script = "scripts/install_${local.application}.sh"
+  
   # Docker installation options
   install_docker     = true
   use_github_scripts = false
@@ -80,8 +82,11 @@ module "ubuntu_docker" {
   # github_script_path = "setup-docker.sh"
 
   tags = {
-    Environment = "Production"
-    Project     = "Docker Infrastructure"
+    Environment = "${var.environment} ${local.application}"
+    Project     = "${local.application} Infrastructure"
+    Application = local.application
+
+
   }
 }
 
