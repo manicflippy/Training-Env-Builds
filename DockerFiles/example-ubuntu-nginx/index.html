@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGINX Build Hit</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+            animation: glow 1.5s infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff; }
+            to { text-shadow: 0 0 20px #ffcc00; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>You've hit this NGINX build</h1>
+        <p>Welcome! Everything is running smoothly.</p>
+    </div>
+</body>
+</html>

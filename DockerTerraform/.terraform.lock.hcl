@@ -5,7 +5,6 @@ provider "registry.terraform.io/hashicorp/aws" {
   version = "5.89.0"
   hashes = [
     "h1:NaNxQqZLsXZVXKKch3RwCjNJj2kPS6KBEd7AOZaJb54=",
-    "h1:yK0t+VEztYYyDVU8x2JddCH9WaOhOXOrB+dK8PpJAoU=",
     "zh:0e55784d6effc33b9098ffab7fb77a242e0223a59cdcf964caa0be94d14684af",
     "zh:23c64f3eaeffcafb007c89db3dfca94c8adf06b120af55abddaca55a6c6c924c",
     "zh:338f620133cb607ce980f1725a0a78f61cbd42f4c601808ec1ee01a6c16c9811",
@@ -24,10 +23,28 @@ provider "registry.terraform.io/hashicorp/aws" {
   ]
 }
 
+provider "registry.terraform.io/hashicorp/http" {
+  version = "3.4.5"
+  hashes = [
+    "h1:vTXHD+bEBm4Rp/EuJVO4EtZC5qQ8gBzN45u0FP4cC34=",
+    "zh:2072006c177efc101471f3d5eb8e1d8e6c68778cbfd6db3d3f22f59cfe6ce6ae",
+    "zh:3ac4cc0efe11ee054300769cfcc37491433937a8824621d1f8f7a18e7401da87",
+    "zh:63997e5457c9ddf9cfff17bd7bf9f083cbeff3105452045662109dd6be499ef9",
+    "zh:78d5eefdd9e494defcb3c68d282b8f96630502cac21d1ea161f53cfe9bb483b3",
+    "zh:826819bb8ab7d6e3095f597083d5b1ab93d1854312b9e1b6c18288fff9664f34",
+    "zh:8ad74e7d8ec2e226a73d49c7c317108f61a4cb803972fb3f945d1709d5115fcd",
+    "zh:a609ca9e0c91d250ac80295e39d5f524e8c0872d33ba8fde3c3e41893b4b015d",
+    "zh:ae07d19babc452f63f6a6511b944990e819dc20687b6c8f01d1676812f5ada53",
+    "zh:b7c827dc32a1a5d77185a78cd391b01217894b384f58169f98a96d683730d8ce",
+    "zh:d045e3db9f5e39ce78860d3fd94e04604fcbe246f6fe346ee50a971f936e9ccd",
+    "zh:ec28f9b52c74edd47eebbb5c254a6df5706360cde5ccd65097976efca23a2977",
+    "zh:f24982eaa7d34fd66554c3cf94873713a0dff14da9ea4c4be0cc76f1a6146d59",
+  ]
+}
+
 provider "registry.terraform.io/hashicorp/local" {
   version = "2.5.2"
   hashes = [
-    "h1:6NIiHWMbE9bFZaUiqC+OokdWSbW7g3+yQYnO4yvgtuY=",
     "h1:ERAqA7AfanDulZ9OgJDITGM27OnwiYjUNXezJ5zbBvQ=",
     "zh:136299545178ce281c56f36965bf91c35407c11897f7082b3b983d86cb79b511",
     "zh:3b4486858aa9cb8163378722b642c57c529b6c64bfbfc9461d940a84cd66ebea",
@@ -47,7 +64,6 @@ provider "registry.terraform.io/hashicorp/local" {
 provider "registry.terraform.io/hashicorp/tls" {
   version = "4.0.6"
   hashes = [
-    "h1:17Y+vdYNKgphpe1/SU5PBnGuYKEJkJZ7MZCnmAwsAGQ=",
     "h1:N7VxdRDiNZoRS9dnXJ+QuKWKn514ahS+U6f9K3cF44s=",
     "zh:10de0d8af02f2e578101688fd334da3849f56ea91b0d9bd5b1f7a243417fdda8",
     "zh:37fc01f8b2bc9d5b055dc3e78bfd1beb7c42cfb776a4c81106e19c8911366297",
