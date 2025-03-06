@@ -30,5 +30,3 @@ if (-not [string]::IsNullOrEmpty($env:AWS_ACCESS_KEY_ID) -and
 } else { 
     Write-Host "AWS credentials are missing or empty" -ForegroundColor Red 
 } 
-
- 

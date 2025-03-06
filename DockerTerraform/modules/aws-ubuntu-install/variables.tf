@@ -109,3 +109,9 @@ variable "github_script_path" {
   type        = string
   default     = "setup-docker.sh"
 }
+
+variable "installation_script" {
+  description = "Path to the installation script"
+  type        = string
+  default     = ""
+}

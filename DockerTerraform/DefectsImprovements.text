@@ -1,0 +1,71 @@
+Needs My_IP restriction on SSH and/or Web access.
+Needs to dynamically get the ami available for the region
+
+
+lets say this resource block was part of a module and I wanted the ability to run the module from my main and pass it an arbitrary installation script as a variable. but if I dent sset hte variable in the module block it would just build the server successfully and not execute any scipt as none was passed
+Copilot said:
+Copilot
+You can achieve this by defining a variable for the installation script in your module and using a conditional statement to handle the case where no script is provided. Here's how you can do it:
+
+Define the Variable in the Module:
+
+In your module, define a variable for the installation script.
+variable "installation_script" {
+  description = "Path to the installation script"
+  type        = string
+  default     = ""
+}
+Update the Resource Block:
+
+Modify the resource block to conditionally include the file provisioner and user_data based on whether the installation_script variable is set.
+resource "aws_instance" "ubuntu_server" {
+  ami                    = var.ami_id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
+  vpc_security_group_ids = [aws_security_group.ubuntu_sg.id]
+  subnet_id              = var.subnet_id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-server"
+    }
+  )
+
+  # Connection details for provisioner
+  connection {
+    type        = "ssh"
+    user        = var.ssh_username
+    private_key = file(var.private_key_path)
+    host        = self.public_ip
+  }
+
+  dynamic "provisioner" {
+    for_each = var.installation_script != "" ? [1] : []
+    content {
+      source      = var.installation_script
+      destination = "/tmp/install_script.sh"
+    }
+  }
+
+  user_data = var.installation_script != "" ? <<-EOF
+    #cloud-config
+    runcmd:
+      - [ "bash", "/tmp/install_script.sh" ]
+  EOF
+  : null
+}
+Call the Module from Your Main Configuration:
+
+In your main configuration, call the module and pass the installation script as a variable. If you don't set the variable, the instance will be created without running any script.
+module "ubuntu_server" {
+  source              = "./modules/ubuntu_server"
+  ami_id              = "ami-12345678"
+  instance_type       = "t2.micro"
+  key_name            = "my-key-pair"
+  subnet_id           = "subnet-12345678"
+  ssh_username        = "ubuntu"
+  private_key_path    = "~/.ssh/id_rsa"
+  installation_script = "path/to/install_docker.sh" # Optional
+}
+By using the dynamic block and conditional statements, you can ensure that the script is only copied and executed if the installation_script variable is provided. If the variable is not set, the instance will be created without running any script.
