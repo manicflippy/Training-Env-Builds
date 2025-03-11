@@ -50,6 +50,13 @@ variable "security_group_name" {
   default     = "ubuntu-docker-sg"
 }
 
+
+variable "security_group_id" {
+  description = "ID of an existing security group to use instead of creating one"
+  type        = string
+  default     = ""
+}
+
 variable "ssh_username" {
   description = "Username for SSH access"
   type        = string
