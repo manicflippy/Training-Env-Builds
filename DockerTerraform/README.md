@@ -1,6 +1,6 @@
 # AWS Ubuntu Docker Terraform Configuration
 
-This project demonstrates how to deploy an Ubuntu server on AWS and install Docker using Terraform.
+This project demonstrates how to deploy one or more Ubuntu servers on AWS and install Docker using Terraform.
 
 ## Project Structure
 
@@ -53,11 +53,34 @@ Make sure both files are in the same directory as your Terraform configuration.
    terraform destroy
    ```
 
+### Deploying Multiple Servers
+
+You can deploy multiple Docker servers by setting the `server_count` variable:
+
+```bash
+# Deploy 3 servers
+terraform apply -var="server_count=3"
+```
+
+Or by adding it to your `terraform.tfvars` file:
+
+```hcl
+server_count = 3
+```
+
+When multiple servers are deployed:
+- Each server will have a unique name (e.g., dev-ubuntu-docker-1, dev-ubuntu-docker-2)
+- The output will include:
+  - A map of all server public IPs with keys like "server_1", "server_2", etc.
+  - A map of all SSH connection commands for each server
+  - The original single-server outputs for backward compatibility
+
 ## Configuration Options
 
 The main configuration file (`main.tf`) allows you to customize:
 
 - AWS region
+- Number of servers to deploy (`server_count`)
 - Instance type
 - Security group settings
 - Docker installation method (direct or via GitHub)
@@ -73,5 +96,6 @@ This project uses a modular approach, which offers several advantages:
 - **Maintainability**: Changes to the Docker installation process only need to be made in one place
 - **Parameterization**: Easy customization of deployment options
 - **Encapsulation**: Implementation details are hidden from the main configuration
+- **Scalability**: Easily deploy multiple servers with unique names
 
 If you prefer a monolithic approach, you can find the original non-modular configuration in the `aws_ubuntu_docker.tf` file.

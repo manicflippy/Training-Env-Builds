@@ -13,11 +13,6 @@ output "private_ip" {
   value       = aws_instance.ubuntu_server.private_ip
 }
 
-output "security_group_id" {
-  description = "ID of the security group"
-  value       = aws_security_group.ubuntu_sg.id
-}
-
 output "ssh_command" {
   description = "SSH command to connect to the instance"
   value       = "ssh -i ${var.private_key_path} ${var.ssh_username}@${aws_instance.ubuntu_server.public_ip}"

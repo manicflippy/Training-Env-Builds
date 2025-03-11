@@ -4,11 +4,8 @@ data "aws_availability_zones" "available" {}
 #Define the VPC
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
-
   tags = {
     Name        = var.vpc_name
-    Environment = "demo_environment"
-    Terraform   = "true"
     Region      = var.aws_region
   }
 }
@@ -61,7 +58,6 @@ resource "aws_route_table" "public_route_table" {
   }
   tags = {
     Name      = "demo_public_rtb"
-    Terraform = "true"
   }
 }
 
@@ -75,7 +71,6 @@ resource "aws_route_table" "private_route_table" {
   }
   tags = {
     Name      = "demo_private_rtb"
-    Terraform = "true"
   }
 }
 
