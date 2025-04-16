@@ -1,0 +1,280 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+}
+
+.input-section {
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    flex-basis: 100%;
+}
+
+.input-section input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.voice-controls {
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+
+.voice-controls label {
+    font-weight: 600;
+}
+
+.voice-controls select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    min-width: 200px;
+}
+
+.rate-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rate-control input {
+    width: 150px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#fetchButton {
+    background-color: #3498db;
+    color: white;
+}
+
+#playButton {
+    background-color: #2ecc71;
+    color: white;
+}
+
+#pauseButton {
+    background-color: #f39c12;
+    color: white;
+}
+
+#stopButton {
+    background-color: #e74c3c;
+    color: white;
+}
+
+#readSelectionButton {
+    background-color: #9b59b6;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.content-display {
+    margin-top: 30px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.content-display h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+#contentArea {
+    line-height: 1.8;
+}
+
+/* Preserve formatting for content */
+#contentArea h1, #contentArea h2, #contentArea h3, #contentArea h4, #contentArea h5, #contentArea h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+#contentArea p {
+    margin-bottom: 1em;
+}
+
+#contentArea ul, #contentArea ol {
+    margin-left: 2em;
+    margin-bottom: 1em;
+}
+
+#contentArea li {
+    margin-bottom: 0.5em;
+}
+
+#contentArea pre, #contentArea code {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 0.2em 0.4em;
+    font-family: monospace;
+}
+
+#contentArea pre {
+    padding: 1em;
+    overflow-x: auto;
+    margin-bottom: 1em;
+}
+
+#contentArea a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+#contentArea a:hover {
+    text-decoration: underline;
+}
+
+#contentArea blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    margin-left: 0;
+    color: #666;
+}
+
+#contentArea table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+#contentArea th, #contentArea td {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+}
+
+#contentArea th {
+    background-color: #f5f5f5;
+}
+
+/* Image styling */
+#contentArea img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#contentArea figure {
+    margin: 1.5em 0;
+    text-align: center;
+}
+
+#contentArea figcaption {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 0.5em;
+}
+
+.status {
+    margin-top: 20px;
+    text-align: center;
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+.highlight {
+    background-color: yellow;
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+.user-selection {
+    background-color: rgba(0, 123, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Make sure highlight stands out over selection */
+.user-selection.highlight {
+    background-color: yellow;
+    border: 1px solid orange;
+}
+
+.highlight-next {
+    background-color: #ffffcc; /* Brighter yellow */
+    font-weight: bold;
+}
+
+.highlight-previous {
+    background-color: #e6e600; /* Darker yellow */
+}
+
+@media (max-width: 768px) {
+    .input-section, .voice-controls, .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .voice-controls {
+        gap: 15px;
+    }
+}

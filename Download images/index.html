@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Learn Content Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Microsoft Learn Content Viewer</h1>
+            <div class="input-group">
+                <input type="text" id="urlInput" placeholder="Enter Microsoft Learn URL" value="https://learn.microsoft.com/en-us/training/modules/control-network-traffic-flow-with-routes/2-azure-virtual-network-route">
+                <button id="fetchBtn">Fetch Content</button>
+                <button id="saveBtn">Save Content</button>
+                <button id="loadBtn">Load Saved Content</button>
+            </div>
+        </header>
+        
+        <div id="statusMessage" class="status-message"></div>
+        
+        <main>
+            <div id="content" class="content-container"></div>
+        </main>
+        
+        <div id="imageDebug" class="image-debug"></div>
+        
+        <div id="savedFiles" class="saved-files" style="display: none;">
+            <h3>Saved Files</h3>
+            <div class="saved-files-info">
+                <p>Files are saved to: <code>saved-content/</code> folder</p>
+                <p>To view saved files, check this folder in your file explorer.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

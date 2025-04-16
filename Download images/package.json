@@ -1,0 +1,15 @@
+{
+  "name": "microsoft-learn-downloader",
+  "version": "1.0.0",
+  "description": "Download and save Microsoft Learn content locally",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "microsoft-learn",
+    "content-downloader"
+  ],
+  "author": "",
+  "license": "MIT"
+}

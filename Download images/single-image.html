@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Learn Image Downloader</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #0078d4;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #0062a9;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background-color: #dff6dd;
+            color: #107c10;
+        }
+        
+        .error {
+            background-color: #fde7e9;
+            color: #d13438;
+        }
+        
+        .info {
+            background-color: #e5f1fb;
+            color: #0078d4;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+        
+        .image-container {
+            margin-top: 20px;
+        }
+        
+        .methods {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .method {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .method h3 {
+            margin-top: 0;
+            color: #0078d4;
+        }
+        
+        .download-btn {
+            margin-top: 15px;
+            background-color: #107c10;
+        }
+        
+        .download-btn:hover {
+            background-color: #0b5a0b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Microsoft Learn Image Downloader</h1>
+    
+    <div class="container">
+        <h2>Single Image Test</h2>
+        <p>This page will download and display a specific SVG image from Microsoft Learn.</p>
+        <button id="loadBtn">Load Image</button>
+        <button id="downloadBtn" disabled>Download Image</button>
+        
+        <div id="status" class="status info" style="display: none;"></div>
+        
+        <div id="imageContainer" class="image-container"></div>
+        
+        <div id="methods" class="methods"></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadBtn = document.getElementById('loadBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const status = document.getElementById('status');
+            const imageContainer = document.getElementById('imageContainer');
+            const methodsContainer = document.getElementById('methods');
+            
+            // The specific image URL we want to download
+            const imageUrl = 'https://learn.microsoft.com/en-us/training/modules/control-network-traffic-flow-with-routes/media/2-system-routes-subnets-internet.svg';
+            
+            // Variable to store the downloaded image blob
+            let imageBlob = null;
+            
+            // Show status message
+            function showStatus(message, type) {
+                status.textContent = message;
+                status.className = 'status ' + type;
+                status.style.display = 'block';
+            }
+            
+            // Method 1: Direct fetch with proper headers
+            async function tryDirectFetch() {
+                const methodDiv = document.createElement('div');
+                methodDiv.className = 'method';
+                methodDiv.innerHTML = `
+                    <h3>Method 1: Direct Fetch with Headers</h3>
+                    <div class="status info">Trying...</div>
+                `;
+                methodsContainer.appendChild(methodDiv);
+                
+                try {
+                    const response = await fetch(imageUrl, {
+                        headers: {
+                            'Referer': 'https://learn.microsoft.com/',
+                            'Origin': 'https://learn.microsoft.com'
+                        },
+                        mode: 'cors',
+                        credentials: 'omit'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    const blob = await response.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+                    
+                    // Store the blob for download
+                    imageBlob = blob;
+                    
+                    // Display the image
+                    methodDiv.innerHTML += `<img src="${blobUrl}" alt="SVG Image">`;
+                    methodDiv.querySelector('.status').className = 'status success';
+                    methodDiv.querySelector('.status').textContent = '✓ Success';
+                    
+                    // Display in main container
+                    imageContainer.innerHTML = `<img src="${blobUrl}" alt="SVG Image">`;
+                    
+                    // Enable download button
+                    downloadBtn.disabled = false;
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Direct fetch failed:', error);
+                    methodDiv.querySelector('.status').className = 'status error';
+                    methodDiv.querySelector('.status').textContent = `✗ Failed: ${error.message}`;
+                    return false;
+                }
+            }
+            
+            // Method 2: Using images.weserv.nl proxy
+            async function tryWeservProxy() {
+                const methodDiv = document.createElement('div');
+                methodDiv.className = 'method';
+                methodDiv.innerHTML = `
+                    <h3>Method 2: Weserv.nl Proxy</h3>
+                    <div class="status info">Trying...</div>
+                `;
+                methodsContainer.appendChild(methodDiv);
+                
+                try {
+                    const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}`;
+                    
+                    // For SVGs, we need to fetch it first since weserv might convert it
+                    const response = await fetch(proxyUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    const blob = await response.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+                    
+                    // Store the blob for download if we don't already have one
+                    if (!imageBlob) {
+                        imageBlob = blob;
+                    }
+                    
+                    // Display the image
+                    methodDiv.innerHTML += `<img src="${blobUrl}" alt="SVG Image">`;
+                    methodDiv.querySelector('.status').className = 'status success';
+                    methodDiv.querySelector('.status').textContent = '✓ Success';
+                    
+                    // Display in main container if not already displayed
+                    if (imageContainer.innerHTML === '') {
+                        imageContainer.innerHTML = `<img src="${blobUrl}" alt="SVG Image">`;
+                        
+                        // Enable download button
+                        downloadBtn.disabled = false;
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Weserv proxy failed:', error);
+                    methodDiv.querySelector('.status').className = 'status error';
+                    methodDiv.querySelector('.status').textContent = `✗ Failed: ${error.message}`;
+                    return false;
+                }
+            }
+            
+            // Method 3: SVG in iframe with referrer policy
+            function trySvgIframe() {
+                const methodDiv = document.createElement('div');
+                methodDiv.className = 'method';
+                methodDiv.innerHTML = `
+                    <h3>Method 3: SVG in iframe</h3>
+                    <div class="status info">Trying...</div>
+                `;
+                methodsContainer.appendChild(methodDiv);
+                
+                try {
+                    // Create iframe
+                    const iframe = document.createElement('iframe');
+                    iframe.src = imageUrl;
+                    iframe.style.width = '100%';
+                    iframe.style.height = '200px';
+                    iframe.style.border = 'none';
+                    iframe.setAttribute('referrerpolicy', 'origin');
+                    
+                    // Add load and error handlers
+                    iframe.onload = () => {
+                        methodDiv.querySelector('.status').className = 'status success';
+                        methodDiv.querySelector('.status').textContent = '✓ Success';
+                        
+                        // If we don't have an image yet, use this iframe
+                        if (imageContainer.innerHTML === '') {
+                            const mainIframe = document.createElement('iframe');
+                            mainIframe.src = imageUrl;
+                            mainIframe.style.width = '100%';
+                            mainIframe.style.height = '400px';
+                            mainIframe.style.border = 'none';
+                            mainIframe.setAttribute('referrerpolicy', 'origin');
+                            imageContainer.appendChild(mainIframe);
+                            
+                            // We can't directly download from iframe, but we can open it in a new tab
+                            if (!imageBlob) {
+                                downloadBtn.textContent = 'Open in New Tab';
+                                downloadBtn.disabled = false;
+                                downloadBtn.onclick = () => {
+                                    window.open(imageUrl, '_blank');
+                                };
+                            }
+                        }
+                    };
+                    
+                    iframe.onerror = (error) => {
+                        methodDiv.querySelector('.status').className = 'status error';
+                        methodDiv.querySelector('.status').textContent = '✗ Failed';
+                        console.error('Iframe error:', error);
+                    };
+                    
+                    // Add iframe to the method div
+                    methodDiv.appendChild(iframe);
+                    
+                    return true;
+                } catch (error) {
+                    console.error('SVG iframe failed:', error);
+                    methodDiv.querySelector('.status').className = 'status error';
+                    methodDiv.querySelector('.status').textContent = `✗ Failed: ${error.message}`;
+                    return false;
+                }
+            }
+            
+            // Load the image using all methods
+            async function loadImage() {
+                showStatus('Loading image using multiple methods...', 'info');
+                methodsContainer.innerHTML = '';
+                imageContainer.innerHTML = '';
+                downloadBtn.disabled = true;
+                
+                // Try all methods in parallel
+                const results = await Promise.all([
+                    tryDirectFetch(),
+                    tryWeservProxy(),
+                    trySvgIframe()
+                ]);
+                
+                if (results.some(result => result)) {
+                    showStatus('Image loaded successfully using at least one method!', 'success');
+                } else {
+                    showStatus('Failed to load image using any method.', 'error');
+                }
+            }
+            
+            // Download the image
+            function downloadImage() {
+                if (!imageBlob) {
+                    showStatus('No image to download.', 'error');
+                    return;
+                }
+                
+                // Create a download link
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(imageBlob);
+                a.download = 'microsoft-learn-image.svg';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                showStatus('Image downloaded successfully!', 'success');
+            }
+            
+            // Event listeners
+            loadBtn.addEventListener('click', loadImage);
+            downloadBtn.addEventListener('click', downloadImage);
+        });
+    </script>
+</body>
+</html>

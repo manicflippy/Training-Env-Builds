@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Learn Image Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1, h2 {
+            color: #0078d4;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: #0062a9;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .status {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background-color: #dff6dd;
+            color: #107c10;
+        }
+        
+        .error {
+            background-color: #fde7e9;
+            color: #d13438;
+        }
+        
+        .info {
+            background-color: #e5f1fb;
+            color: #0078d4;
+        }
+        
+        .warning {
+            background-color: #fff4ce;
+            color: #9d5d00;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #e0e0e0;
+            margin: 10px 0;
+            display: block;
+        }
+        
+        .image-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Microsoft Learn Image Test</h1>
+    
+    <div class="container">
+        <h2>Enter Image URL</h2>
+        <input type="text" id="imageUrlInput" placeholder="https://learn.microsoft.com/..." value="https://learn.microsoft.com/en-us/training/modules/control-network-traffic-flow-with-routes/media/2-system-routes-subnets-internet.svg">
+        <button id="loadBtn">Load Image</button>
+        <button id="downloadBtn" disabled>Download Image</button>
+        
+        <div id="status" class="status info" style="display: none;"></div>
+        
+        <div id="imageContainer" class="image-container" style="display: none;">
+            <h2>Image Preview</h2>
+            <div id="imagePreview"></div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageUrlInput = document.getElementById('imageUrlInput');
+            const loadBtn = document.getElementById('loadBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const status = document.getElementById('status');
+            const imageContainer = document.getElementById('imageContainer');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            let currentImage = null;
+            
+            // Show status message
+            function showStatus(message, type) {
+                status.textContent = message;
+                status.className = 'status ' + type;
+                status.style.display = 'block';
+            }
+            
+            // Load image using Weserv.nl proxy
+            function loadImageWithProxy(url) {
+                // Clear previous image
+                imagePreview.innerHTML = '';
+                downloadBtn.disabled = true;
+                
+                // Show loading status
+                showStatus('Loading image...', 'info');
+                
+                // Create a proxy URL for the image
+                const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+                
+                // Create an image element
+                const img = document.createElement('img');
+                img.alt = 'Microsoft Learn Image';
+                
+                // Add load and error handlers
+                img.onload = () => {
+                    showStatus('Image loaded successfully!', 'success');
+                    imageContainer.style.display = 'block';
+                    downloadBtn.disabled = false;
+                    currentImage = {
+                        url: proxyUrl,
+                        originalUrl: url
+                    };
+                    
+                    // Add image info
+                    const infoDiv = document.createElement('div');
+                    infoDiv.innerHTML = `
+                        <p><strong>Original URL:</strong> <a href="${url}" target="_blank">${url}</a></p>
+                        <p><strong>Proxy URL:</strong> <a href="${proxyUrl}" target="_blank">${proxyUrl}</a></p>
+                    `;
+                    imagePreview.appendChild(infoDiv);
+                };
+                
+                img.onerror = () => {
+                    showStatus('Failed to load image. Please check the URL and try again.', 'error');
+                    imageContainer.style.display = 'none';
+                };
+                
+                // Set the source and add to the preview
+                img.src = proxyUrl;
+                imagePreview.insertBefore(img, imagePreview.firstChild);
+                
+                return proxyUrl;
+            }
+            
+            // Download the image
+            function downloadImage() {
+                if (!currentImage) {
+                    showStatus('No image to download.', 'warning');
+                    return;
+                }
+                
+                showStatus('Downloading image...', 'info');
+                
+                fetch(currentImage.url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Generate a filename from the URL
+                        const urlParts = currentImage.originalUrl.split('/');
+                        const filename = urlParts[urlParts.length - 1];
+                        
+                        // Create a download link
+                        const blobUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                        
+                        showStatus('Image downloaded successfully!', 'success');
+                    })
+                    .catch(error => {
+                        console.error('Download error:', error);
+                        showStatus(`Error downloading image: ${error.message}`, 'error');
+                    });
+            }
+            
+            // Event listeners
+            loadBtn.addEventListener('click', () => {
+                const url = imageUrlInput.value.trim();
+                
+                if (!url) {
+                    showStatus('Please enter a valid URL.', 'error');
+                    return;
+                }
+                
+                loadImageWithProxy(url);
+            });
+            
+            downloadBtn.addEventListener('click', downloadImage);
+            
+            // Load the default image on page load
+            if (imageUrlInput.value) {
+                loadImageWithProxy(imageUrlInput.value);
+            }
+        });
+    </script>
+</body>
+</html>

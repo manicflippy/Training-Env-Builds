@@ -1,0 +1,31 @@
+If gpg --sign hangs, it usually indicates an issue with the GPG agent, pinentry, or its configuration. Let’s resolve this step by step:
+
+
+Step 1: Confirm pinentry is Installed
+Check if pinentry.exe exists in the GPG4Win installation directory:
+
+Open the directory where GPG4Win is installed (usually C:\Program Files (x86)\GnuPG\bin or C:\Program Files\GnuPG\bin).
+Look for a file named pinentry.exe.
+
+Step 2: Set the Correct pinentry Program
+If pinentry.exe exists, ensure GPG is configured to use it:
+
+Open your gpg-agent.conf file:
+Edit
+    C:\Users\<your_username>\AppData\Roaming\gnupg\gpg-agent.conf
+If the file doesn’t exist, create it.
+Add the following line:
+
+    pinentry-program "C:/Program Files (x86)/GnuPG/bin/pinentry.exe"
+(Adjust the path if your pinentry.exe is located elsewhere.)
+
+Restart the GPG agent to apply changes:
+
+    gpgconf --kill gpg-agent
+    gpgconf --launch gpg-agent
+
+Step 3: Test the Pinentry Program
+Run this command to test if pinentry works:
+    echo "test" | gpg --clearsign
+If you see a popup asking for your passphrase, pinentry is working correctly.
+If it hangs, the configuration is still incorrect, or the agent isn't able to use pinentry.
