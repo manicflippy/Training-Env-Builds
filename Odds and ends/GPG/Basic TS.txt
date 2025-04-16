@@ -1,0 +1,12 @@
+Restart the GPG agent
+	gpgconf --kill gpg-agent
+	gpgconf --launch gpg-agent
+
+Try listing your secret keys
+	gpg --list-secret-keys --keyid-format LONG
+If this command works, the agent is running correctly.
+
+Try a Test Signing
+	echo "test" | gpg --clearsign
+
+

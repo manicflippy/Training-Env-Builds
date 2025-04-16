@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Page Text-to-Speech</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Learning Page Text-to-Speech</h1>
+        
+        <div class="input-section">
+            <label for="pageUrl">Enter URL of learning page:</label>
+            <input type="text" id="pageUrl" placeholder="https://learn.microsoft.com/..." value="https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design">
+            <button id="fetchButton">Fetch Content</button>
+        </div>
+        
+        <div class="voice-controls">
+            <label for="voiceSelect">Choose Voice:</label>
+            <select id="voiceSelect"></select>
+            
+            <div class="rate-control">
+                <label for="rateSlider">Speed:</label>
+                <input type="range" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
+                <span id="rateValue">1.0</span>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="playButton" disabled>Play</button>
+            <button id="pauseButton" disabled>Pause</button>
+            <button id="stopButton" disabled>Stop</button>
+            <button id="readSelectionButton" disabled>Read Selection</button>
+        </div>
+        
+        <div class="content-display">
+            <h2>Extracted Content</h2>
+            <div id="contentArea">
+                <p>Content will appear here after fetching...</p>
+            </div>
+        </div>
+        
+        <div class="status">
+            <p id="statusMessage"></p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
